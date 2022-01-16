@@ -1,70 +1,53 @@
-import React, {useRef} from 'react';
-import {Linking} from 'react-native';
+import React from 'react';
 import {
-  ViroText,
-  ViroVideo,
   ViroARScene,
-  ViroARImageMarker,
   ViroARSceneNavigator,
   ViroARTrackingTargets,
 } from '@viro-community/react-viro';
+import ARLink from './src/components/ARLink';
+import ARVideo from './src/components/ARVideo';
 
-ViroARTrackingTargets.createTargets({
-  link: {
+const sources = [
+  {
+    id: '1',
+    Component: ARLink,
+    target: require('./src/link.jpg'),
+    source:
+      'https://www.skysports.com/football/news/12691/12482950/chelsea-transfer-news-and-rumours-january-transfer-window-2022',
+  },
+  {
+    id: '2',
+    Component: ARVideo,
+    target: require('./src/video.png'),
+    source: require('./src/video.mp4'),
+  },
+];
+
+const targets = {};
+sources.forEach(({id, target}) => {
+  targets[id] = {
+    source: target,
     physicalWidth: 1,
     orientation: 'Up',
-    source: require('./src/link.jpg'),
-  },
-  video: {
-    physicalWidth: 1,
-    orientation: 'Up',
-    source: require('./src/video.png'),
-  },
+  };
 });
 
-export default () => {
-  const videoRef = useRef();
+ViroARTrackingTargets.createTargets(targets);
 
-  function navigateToLink() {
-    Linking.openURL(
-      'https://www.skysports.com/football/news/12691/12482950/chelsea-transfer-news-and-rumours-january-transfer-window-2022',
-    );
-  }
-
-  function handleVideo({trackingMethod}) {
-    if (trackingMethod === 'tracking') {
-      return videoRef.current.setNativeProps({paused: false});
-    }
-
-    videoRef.current.setNativeProps({paused: true});
-  }
-
-  return (
-    <ViroARSceneNavigator
-      autofocus
-      style={{flex: 1}}
-      initialScene={{
-        scene: () => {
-          return (
-            <ViroARScene>
-              <ViroARImageMarker target="link">
-                <ViroText
-                  text="Click here"
-                  rotation={[270, 0, 0]}
-                  onClick={navigateToLink}
-                />
-              </ViroARImageMarker>
-              <ViroARImageMarker target="video" onAnchorUpdated={handleVideo}>
-                <ViroVideo
-                  ref={videoRef}
-                  rotation={[270, 0, 0]}
-                  source={require('./src/video.mp4')}
-                />
-              </ViroARImageMarker>
-            </ViroARScene>
-          );
-        },
-      }}
-    />
-  );
-};
+export default () => (
+  <ViroARSceneNavigator
+    autofocus
+    style={{flex: 1}}
+    initialScene={{
+      scene: () => {
+        return (
+          <ViroARScene>
+            {sources.map(({id, source, Component}) => (
+              <Component key={id} target={id} source={source} />
+            ))}
+          </ViroARScene>
+        );
+      },
+    }}
+  />
+);
