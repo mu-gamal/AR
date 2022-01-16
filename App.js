@@ -1,28 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
+import {Linking} from 'react-native';
 import {
-  ViroImage,
+  ViroText,
   ViroARScene,
   ViroARImageMarker,
   ViroARSceneNavigator,
   ViroARTrackingTargets,
 } from '@viro-community/react-viro';
 
-const physicalWidth = 1;
-
 ViroARTrackingTargets.createTargets({
-  axe: {
-    physicalWidth,
+  link: {
+    physicalWidth: 1,
     orientation: 'Up',
-    source: require('./src/1.png'),
+    source: require('./src/link.jpg'),
   },
 });
 
 export default () => {
-  const [details, setDetails] = useState({});
-
   const onAnchorFound = e => {
-    setDetails(e);
+    // console.log('target found');
   };
+
+  function navigateToLink() {
+    Linking.openURL(
+      'https://www.skysports.com/football/news/12691/12482950/chelsea-transfer-news-and-rumours-january-transfer-window-2022',
+    );
+  }
 
   return (
     <ViroARSceneNavigator
@@ -32,11 +35,11 @@ export default () => {
         scene: () => {
           return (
             <ViroARScene>
-              <ViroARImageMarker target="axe" onAnchorFound={onAnchorFound}>
-                <ViroImage
-                  // rotation={[1, 1, 1]}
-                  position={[0, 0, details.position ? details.position[2] : 0]}
-                  source={require('./src/2.jpg')}
+              <ViroARImageMarker target="link" onAnchorFound={onAnchorFound}>
+                <ViroText
+                  text="Click here"
+                  rotation={[270, 0, 0]}
+                  onClick={navigateToLink}
                 />
               </ViroARImageMarker>
             </ViroARScene>
