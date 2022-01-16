@@ -11,15 +11,15 @@ const sources = [
   {
     id: '1',
     Component: ARLink,
-    target: require('./src/link.jpg'),
+    target: require('./src/assets/link.jpg'),
     source:
       'https://www.skysports.com/football/news/12691/12482950/chelsea-transfer-news-and-rumours-january-transfer-window-2022',
   },
   {
     id: '2',
     Component: ARVideo,
-    target: require('./src/video.png'),
-    source: require('./src/video.mp4'),
+    target: require('./src/assets/video.png'),
+    source: require('./src/assets/video.mp4'),
   },
 ];
 
